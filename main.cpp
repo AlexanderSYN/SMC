@@ -21,6 +21,7 @@
 //
 // helper
 //
+#include "header/console/color_console.h"
 #include "header/helper/path_ff.h"
 
 
@@ -48,6 +49,15 @@ int main() {
     //============
     commands["help"] = [&](const std::vector<std::string>&) {
         std::print("HELP");
+    };
+
+    commands["color"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 1) {
+            std::println("you need to write like this -> color ... <- (color name)");
+            return;
+        }
+
+        std::println("{}", ColorConsole::choice_color(args[1]));
     };
 
     commands["cmd"] = [&](const std::vector<std::string>& args) {

@@ -18,5 +18,7 @@ add_executable(MCComand main.cpp
         cpp/console/cmd.cpp
         header/helper/helper.h
         cpp/helper/helper.cpp
+        header/console/color_console.h
+        cpp/console/color_console.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)
