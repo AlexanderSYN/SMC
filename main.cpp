@@ -59,10 +59,11 @@ int main() {
 
         std::println("{}", ColorConsole::choice_color(args[1]));
     };
+    commands["col"] = commands["color"];
 
     commands["cmd"] = [&](const std::vector<std::string>& args) {
         if (args.size() == 1 || args[1] == "run") {
-            std::println("You just run cmd by Windows!");
+            std::println("You just to run the cmd by Windows!");
             std::println("To exit type exit!");
             cmd::run("cmd");
             return;
@@ -70,6 +71,36 @@ int main() {
 
         cmd::run(args[1]);
     };
+
+    commands["path"] = [&](const std::vector<std::string>& args) {
+        if (args.size() == 1) {
+            if (isShowPathWhenStartLoop)
+                std::println("[HINT] maybe you mean -> path --hide?");
+            else
+                std::println("[HINT] maybe you mean -> path --show?");
+            return;
+        }
+
+        if (args[1] == "--hide" || args[1] == "-h" || args[1] == "hide")
+            isShowPathWhenStartLoop = false;
+
+        else if (args[1] == "--show" || args[1] == "-s" || args[1] == "show")
+            isShowPathWhenStartLoop = true;
+        else {
+            std::println("[ERR] Unknown parameter!");
+            std::println("[HINT] maybe you mean -> path --hide"
+                                                     " or path --show?");
+        }
+    };
+
+    commands["clear"] = [&](const std::vector<std::string>& args) {
+        #ifdef _WIN32 // for windows
+                system("cls");
+        #else // for Mac OS / Linux
+                system("clear");
+        #endif
+    };
+    commands["cls"] = commands["clear"];
 
     commands["exit"] = [&](const std::vector<std::string>&) {
         isRun = false;
@@ -120,9 +151,10 @@ int main() {
 
             if (!args.empty() && commands.contains(args[0]))
                 commands[args[0]](args);
-            else
-                std::println("Uknown command!");
-
+            else {
+                std::println("Unknown command!");
+                std::println("for help type help!");
+            }
         } catch (const std::exception& e) {
             std::cerr << "[ERROR_CONSOLE] " << e.what() << std::endl;
         }
