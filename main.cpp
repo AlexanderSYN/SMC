@@ -170,9 +170,23 @@ int main() {
             std::println("{}", path_ff::get_OPath());
             return;
         }
+        else if (args.size() == 2)
+            FILEO::set_path_in_cd(args[1], path_ff::get_OPath(),
+                path_ff::get_path());
+        else {
+            std::string path_with_spaces;
+            for (int i = 1; i <= args.size() - 1; i++) {
+                if (i != args.size() - 1)
+                    path_with_spaces += args[i] + " ";
+                else
+                    path_with_spaces += args[i];
+            }
 
-        FILEO::set_path_in_cd(args[1], path_ff::get_OPath(),
-            path_ff::get_path());
+            std::println("{}", path_with_spaces);
+
+            FILEO::set_path_in_cd(path_with_spaces, path_ff::get_OPath(),
+                path_ff::get_path());
+        }
     };
     commands["pwd"] = [&](const std::vector<std::string>&) {
         std::println("{}", path_ff::get_OPath());

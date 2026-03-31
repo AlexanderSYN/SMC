@@ -122,12 +122,12 @@ void FILEO::command_open(const fs::path &path) {
             auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
 
             if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
-                std::println("{:%H:%M:%S} {} {} {} {}",  sctp,
+                std::println("{:%d.%m.%Y %H:%M} {} {} {} {}",  sctp,
                     HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
                     HFILEF::is_hidden(entry),
                     entry.path().filename().string());
             } else {
-                std::println("{:%H:%M:%S} {} {} {}", sctp,
+                std::println("{:%d.%m.%Y %H:%M} {} {} {}", sctp,
                     HFILEF::type(entry),
                     HFILEF::is_hidden(entry),
                     entry.path().filename().string());
