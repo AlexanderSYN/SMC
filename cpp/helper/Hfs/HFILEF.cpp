@@ -114,8 +114,8 @@ std::string HFILEF::get_size_file(const fs::path &path) {
             return std::to_string(size_in_byte) + "KB";
         else if (size_in_byte < GB)
             return std::to_string(size_in_byte) + "MB";
-        else
-            return std::to_string(size_in_byte) + "GB";
+
+        return std::to_string(size_in_byte) + "GB";
     } catch (const std::exception& e) {
         return "ERR";
     }

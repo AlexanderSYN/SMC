@@ -195,6 +195,9 @@ int main() {
     commands["open"] = [&](const std::vector<std::string>& args) {
         FILEO::command_open(path_ff::get_path());
     };
+    commands["dir"] = [&](const std::vector<std::string>&) {
+        FILEO::command_dir_windows(path_ff::get_path());
+    };
 
 
 
