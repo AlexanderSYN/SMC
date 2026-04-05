@@ -14,12 +14,18 @@
 //
 #include "header/fs/FILEO.h"
 #include "header/fs/FILEDC.hpp"
+#include "header/fs/FILEDEL.h"
 
 //
 // console
 //
 #include "header/console/cmd.h"
 #include "header/console/color_console.h"
+
+//
+// time and date
+//
+#include"header/date/date.h"
 
 //
 // helper
@@ -70,14 +76,25 @@ int main() {
     };
 
     commands["color"] = [&](const std::vector<std::string>& args) {
-        if (args.empty()) {
-            std::println("you need to write like this -> color ... <- (color name)");
+        if (args.size() <= 1) {
+            std::println("[HINT] you need to write like this -> color ... <- (color name)");
             return;
         }
 
         std::println("{}", ColorConsole::choice_color(args[1]));
     };
     commands["col"] = commands["color"];
+
+    //================
+    //time and date
+    //================
+    commands["time"] = [&](const std::vector<std::string>&) {
+        println("{}", date::local_time());
+    };
+
+    commands["date"] = [&](const std::vector<std::string>&) {
+        println("{}", date::local_date_and_time());
+    };
 
     commands["cmd"] = [&](const std::vector<std::string>& args) {
         if (args.size() == 1 || args[1] == "run") {
@@ -171,7 +188,16 @@ int main() {
     // work with text
     //=================
     commands["cat"] = [&](const std::vector<std::string>& args) {
-        FILEO::read_file(args[0]);
+        if (args.size() > 1) {
+            fs::path path = helper::connect_path(path_ff::get_path(), args[1]);
+            if (fs::exists(path) & fs::is_regular_file(path))
+                FILEO::read_file(path.string());
+            else
+                FILEO::read_file(args[1]);
+        }
+        else
+            FILEO::read_file(path_ff::get_path());
+
     };
 
     //============================
@@ -210,6 +236,7 @@ int main() {
         FILEO::show_in_explorer(args[1]);
     };
     commands["exp"] = commands["explorer"];
+    commands["openf"] = commands["explorer"];
 
     commands["open"] = [&](const std::vector<std::string>& args) {
         FILEO::command_open(path_ff::get_path());
@@ -239,6 +266,21 @@ int main() {
     commands["mkdir"] = [&](const std::vector<std::string>& args) {
         FILEDC::command_mkdir(path_ff::get_path(), args);
     };
+    //========================
+    // delete file or folder
+    //========================
+    commands["delete"] = [&](const std::vector<std::string>& args) {
+        if (args.size() == 2)
+            FILEDEL::del(helper::connect_path(path_ff::get_path(), args[1]));
+        else if (args.size() >= 3) {
+
+        }
+        else
+            FILEDEL::del(path_ff::get_path());
+    };
+    commands["del"] = commands["delete"];
+    commands["remove"] = commands["delete"];
+    commands["rmv"] = commands["delete"];
 
     std::println("for help type help!");
 

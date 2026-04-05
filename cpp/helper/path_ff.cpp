@@ -6,12 +6,19 @@
 fs::path path_ff::path_f = "\\";
 std::string path_ff::OPath = "\\";
 
+///
+/// OPath is Output Path for string
+/// @return path (string)
 std::string path_ff::get_OPath() {
     if (path_ff::OPath.empty())
         return "\\";
 
     return path_ff::OPath;
 }
+
+///
+/// path is path for fs::path
+/// @return path (fs::path)
 fs::path path_ff::get_path() {
     if (path_ff::path_f.empty())
         return "\\";

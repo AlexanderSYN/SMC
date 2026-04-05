@@ -23,5 +23,10 @@ add_executable(MCComand main.cpp
         cpp/fs/FILEDC.cpp
         header/helper/Hfs/HFILEF.h
         cpp/helper/Hfs/HFILEF.cpp
+        header/fs/FILEDel.h
+        cpp/fs/FILEDEL.cpp
+        header/date/date.h
+        header/date/include_date.h
+        cpp/date/date.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)

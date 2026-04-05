@@ -12,6 +12,9 @@
 
 //======================
 // command -> cd (path)
+//
+// example:
+// \ >> cd D:\test
 //======================
 void FILEO::set_path_in_cd(std::string path_by_user,
         std::string OPath, fs::path path) {
@@ -82,7 +85,7 @@ void FILEO::read_file(const fs::path& path_f) {
             }
             file.close();
         } else {
-            std::cerr << "[ERROR_READ_FILE] couldn't open the file" << std::endl;
+            std::cerr << "[ERROR_READ_FILE] couldn't open the file!" << std::endl;
         }
     } catch (const std::exception& e) {
         std::cerr << "[ERROR_READ_FILE] [CRITICAL] " << e.what() << std::endl;
@@ -119,28 +122,33 @@ void FILEO::command_dir_windows(const fs::path &path) {
 //================================================
 void FILEO::command_open(const fs::path &path) {
     try {
+        int count_files = 0, count_folder = 0;
         if (!fs::exists(path)) {
             std::println(std::cerr, "[ERROR_OPEN] Folder doesn't exists!");
             return;
         }
-
+        std::println("Disk: {}", path.string().at(0));
         for (const auto& entry: fs::directory_iterator(path)) {
             auto ftime = std::filesystem::last_write_time(entry.path());
             auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
 
             if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
-                std::println("{:%d.%m.%Y %H:%M} {} {} {} {}",  sctp,
+                std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",  sctp,
                     HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
                     HFILEF::is_hidden(entry),
                     entry.path().filename().string());
+                count_files++;
             } else {
-                std::println("{:%d.%m.%Y %H:%M} {} {} {}", sctp,
+                std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}", sctp,
                     HFILEF::type(entry),
                     HFILEF::is_hidden(entry),
                     entry.path().filename().string());
+                count_folder++;
             }
 
         }
+
+        std::println("\t\t File(s): {}\n \t\t Dir(s): {}", count_files, count_folder);
 
     } catch (const std::exception& e) {
         std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());

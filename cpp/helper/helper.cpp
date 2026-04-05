@@ -46,3 +46,13 @@ std::string helper::connect_path_with_spaces_str(
     return full_path;
 }
 
+///
+/// just connect 2 path in 1
+/// @param first_path first path to need connect
+/// @param second_path second path for connect
+/// @return path
+fs::path helper::connect_path(const fs::path &first_path, const fs::path &second_path) {
+    return first_path / second_path;
+}
+
+
