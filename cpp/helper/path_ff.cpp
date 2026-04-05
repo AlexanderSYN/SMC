@@ -27,6 +27,14 @@ fs::path path_ff::get_path() {
 }
 
 ///
+/// filename from your path
+/// @return filename
+std::string path_ff::filename() {
+    return path_f.filename().string();
+}
+
+
+///
 /// set new path for path_f and OPath
 /// @param new_path new path for path and OPath
 ///

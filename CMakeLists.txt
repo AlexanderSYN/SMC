@@ -28,5 +28,7 @@ add_executable(MCComand main.cpp
         header/date/date.h
         header/date/include_date.h
         cpp/date/date.cpp
+        header/fs/FILEFF.h
+        cpp/fs/FILEFF.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)

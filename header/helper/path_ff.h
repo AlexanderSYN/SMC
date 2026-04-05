@@ -15,6 +15,7 @@ class path_ff {
 public:
     static std::string get_OPath(); // OPath - output path
     static fs::path get_path();
+    static std::string filename();
 
     static void set_path(const std::string& new_path);
 

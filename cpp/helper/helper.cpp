@@ -40,8 +40,16 @@ std::string helper::connect_path_with_spaces_str(
         int drop) {
 
     std::string full_path;
-    for (auto p : args | std::views::drop(drop))
-        full_path += p + " ";
+    int indx = 1;
+    for (const std::string& p : args | std::views::drop(drop)) {
+        indx++;
+        if (args.size() <= indx) {
+            full_path += p;
+        }
+        else {
+            full_path += p + " ";
+        }
+    }
 
     return full_path;
 }

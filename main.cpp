@@ -15,6 +15,7 @@
 #include "header/fs/FILEO.h"
 #include "header/fs/FILEDC.hpp"
 #include "header/fs/FILEDEL.h"
+#include "header/fs/FILEFF.h"
 
 //
 // console
@@ -247,16 +248,32 @@ int main() {
     commands["ls"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1)
             FILEO::command_list(path_ff::get_path());
-
-        else if (args.size() == 2)
-            FILEO::command_list(path_ff::get_path(), args[1]);
-
         else {
-            if (args[1] == "--path" || args[1] == "-p") {
+            fs::path tmp_path = helper::connect_path(path_ff::get_path(), args[1]);
+            if (fs::exists(tmp_path))
+                FILEO::command_list(tmp_path);
+            else
                 FILEO::command_list(helper::connect_path_with_spaces_str(args, 2));
-             }
         }
     };
+
+    //========================
+    // find
+    //========================
+    commands["find"] = [&](const std::vector<std::string>& args) {
+        if (args.size() == 1) {
+            std::println("[HINT] You need to write like so: "
+                         "find <param> <file or folder>");
+            return;
+        }
+        if (args.size() <= 2) {
+            FILEFF::find(args[1], "-g", path_ff::get_path());
+            return;
+        }
+
+        FILEFF::find(args[2], args[1], path_ff::get_path());
+    };
+
     //========================
     // create file or folder
     //========================

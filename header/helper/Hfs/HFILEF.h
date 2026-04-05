@@ -11,6 +11,9 @@
 // Helper Files / Folders
 //
 namespace HFILEF {
+    //==========================================================
+    // The list of system directories to skip (can be expanded)
+    //==========================================================
     const std::vector<std::string> SYSTEM_DIRECTORIES = {
         "System32", "System64", "Windows", "Program Files", "ProgramData",
         "AppData", "Temp", "tmp", "Recycle.Bin", "Recovery",
@@ -18,6 +21,9 @@ namespace HFILEF {
         "$RECYCLE.BIN", "DrWeb Quarantine"
     };
 
+    //==========================================================
+    // List of system file extensions (can be expanded)
+    //==========================================================
     const std::vector<std::string> SYSTEM_EXTENSIONS = {
         ".drv", ".vxd", ".386", ".ocx", ".cpl", ".msc", ".scr",
         ".com", ".tmp", ".inf", ".cat", ".mui"
