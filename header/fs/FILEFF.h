@@ -10,7 +10,7 @@
 #define FINDFF_H
 
 #include "include_fs.h"
-#include "../helper/Hfs/HFILEF.h"
+#include "../helper/Helperfs/HFILEF.h"
 
 class FILEFF {
 public:
@@ -21,8 +21,6 @@ public:
                     const fs::path& path_f);
 
 private:
-    static void show_in_explorer(
-        const std::vector<std::string>& paths_founded_ff, int choice);
     //==========================================================
     // for global searching
     //==========================================================

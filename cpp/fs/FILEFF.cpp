@@ -3,6 +3,7 @@
 //
 
 #include "../../header/fs/FILEFF.h"
+#include "../../header/fs/explorer.h"
 
 void FILEFF::find(std::string search_term, std::string parametr,
                   const fs::path &path_f) {
@@ -158,7 +159,7 @@ void FILEFF::find(std::string search_term, std::string parametr,
 
             choice--;
             if (choice >= 1 && choice < paths_founded_ff.size()) {
-                show_in_explorer(paths_founded_ff, choice);
+                explr::show_in_explorer(paths_founded_ff, choice);
             }
         else
             std::println("No files or folders found matching '{}'",
@@ -272,47 +273,5 @@ void FILEFF::recurs_search(std::string search_term,
 }
 
 
-void FILEFF::show_in_explorer(
-    const std::vector<std::string>& paths_founded_ff, int choice) {
 
-    try {
-        if (!fs::exists(paths_founded_ff.at(choice))) {
-            std::println("Path does not exist: {}",
-                paths_founded_ff.at(choice));
-            return;
-        }
-
-        std::string command;
-
-#ifdef _WIN32
-        command = "explorer /select,\"" + paths_founded_ff.at(choice) + "\"";
-#elif __APPLE__
-        if (fs::is_directory(path)) {
-            command = "open \"" + path.string() "\"";
-        } else {
-            command = "open -R \"" + path.string() + "\"";
-        }
-#elseif __linux__
-        if (fs::is_directory(path)) {
-            command = "xdg-open \"" + path.string() + "\"";
-        } else {
-            command = "xdg-open \"" + path.parent_path().string() + "\"";
-        }
-#else
-        std::cout << "[ERROR] Unsupported OS" << std::endl;
-        return;
-#endif
-
-        int result = std::system(command.c_str());
-        bool success = (result == 1);
-
-        if (success)
-            std::cout << "[SUCCESS OPEN]" << std::endl;
-        else
-            std::cout << "[FAILED OPEN]" << std::endl;
-
-    } catch (const std::exception& e) {
-        std::println("[CRITICAL_ERROR_SHOW_IN_EXPLORER] {}", e.what());
-    }
-}
 

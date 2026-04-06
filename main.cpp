@@ -16,6 +16,12 @@
 #include "header/fs/FILEDC.hpp"
 #include "header/fs/FILEDEL.h"
 #include "header/fs/FILEFF.h"
+#include "header/fs/explorer.h"
+
+//
+// text
+//
+#include "header/text/io_text.h"
 
 //
 // console
@@ -31,10 +37,9 @@
 //
 // helper
 //
-#include <bits/regex_constants.h>
-
 #include "header/helper/helper.h"
 #include "header/helper/path_ff.h"
+
 
 
 namespace fs = std::filesystem;
@@ -192,14 +197,77 @@ int main() {
         if (args.size() > 1) {
             fs::path path = helper::connect_path(path_ff::get_path(), args[1]);
             if (fs::exists(path) & fs::is_regular_file(path))
-                FILEO::read_file(path.string());
+                text::read(path.string());
             else
-                FILEO::read_file(args[1]);
+                text::read(args[1]);
         }
         else
-            FILEO::read_file(path_ff::get_path());
+            text::read(path_ff::get_path());
+    };
+    commands["read"] = commands["cat"];
+
+    // echo (param) (path / text) (text)
+    commands["echo"] = [&](const std::vector<std::string>& args) {
+        if (args.size() == 2 || args.size() == 1) {
+           std::println("[HINT] you need to write like so: "
+                        "echo (parameter) (text) (path)");
+        }
+
+        else if (args.size() >= 3) {
+            fs::path fll_path = helper::connect_path(path_ff::get_path(),
+                                                    args[2]);
+
+            if (!fs::exists(args[2]) && !fs::exists(fll_path)) {
+                if (args[1] == "-w" || args[1] == "--write") {
+                    for (const auto& t : args | std::views::drop(2))
+                        text::write(path_ff::get_path(), t);
+                }
+                else if (args[1] == "-rw" || args[1] == "--rewrite") {
+                    for (const auto& t : args | std::views::drop(2))
+                        text::rewrite(path_ff::get_path(), t);
+                }
+                else {
+                    std::println("[ERR] Uknown parameter");
+                    std::println("[HINT] Write help text");
+                }
+            }
+            else {
+                if (fs::exists(args[2])) {
+                    if (args[1] == "-w" || args[1] == "--write") {
+                        for (const auto& t : args | std::views::drop(3))
+                            text::write(args[2], t);
+                    }
+                    else if (args[1] == "-rw" || args[1] == "--rewrite") {
+                        for (const auto& t : args | std::views::drop(3))
+                            text::rewrite(args[2], t);
+                    }
+                    else {
+                        std::println("[ERR] Uknown parameter");
+                        std::println("[HINT] Write help text");
+                    }
+                }
+                else {
+                    if (args[1] == "-w" || args[1] == "--write") {
+                        for (const auto& t : args | std::views::drop(3))
+                            text::write(fll_path, t);
+                    }
+                    else if (args[1] == "-rw" || args[1] == "--rewrite") {
+                        for (const auto& t : args | std::views::drop(3))
+                            text::rewrite(fll_path, t);
+                    }
+                    else {
+                        std::println("[ERR] Uknown parameter");
+                        std::println("[HINT] Write help text");
+                    }
+                }
+
+
+            }
+        }
 
     };
+
+
 
     //============================
     // work with files / folders
@@ -225,19 +293,34 @@ int main() {
 
     commands["explorer"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1) {
-            FILEO::show_in_explorer(path_ff::get_path());
+            explr::show_in_explorer(path_ff::get_path());
             return;
         }
 
-        if (args.size() > 2)
-            FILEO::show_in_explorer(
-                helper::connect_path_with_spaces(args)
-            );
+        if (args.size() > 2) {
+            explr::show_in_explorer(helper::connect_path_with_spaces(args));
+        }
 
-        FILEO::show_in_explorer(args[1]);
+        explr::show_in_explorer(args[1]);
     };
     commands["exp"] = commands["explorer"];
     commands["openf"] = commands["explorer"];
+
+    commands["run"] = [&](const std::vector<std::string>& args) {
+        if (args.size() <= 1)
+            explr::run_file(path_ff::get_path());
+
+        else {
+            if (fs::exists(args[1])) {
+                explr::run_file(args[1]);
+            }
+            else {
+                fs::path fll_path = helper::connect_path(path_ff::get_path(),
+                                                        args[1]);
+                explr::run_file(fll_path);
+            }
+        }
+    };
 
     commands["open"] = [&](const std::vector<std::string>& args) {
         FILEO::command_open(path_ff::get_path());

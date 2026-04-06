@@ -21,7 +21,7 @@ add_executable(MCComand main.cpp
         cpp/console/color_console.cpp
         header/fs/FILEDC.hpp
         cpp/fs/FILEDC.cpp
-        header/helper/Hfs/HFILEF.h
+        header/helper/Helperfs/HFILEF.h
         cpp/helper/Hfs/HFILEF.cpp
         header/fs/FILEDel.h
         cpp/fs/FILEDEL.cpp
@@ -30,5 +30,9 @@ add_executable(MCComand main.cpp
         cpp/date/date.cpp
         header/fs/FILEFF.h
         cpp/fs/FILEFF.cpp
+        header/fs/explorer.h
+        cpp/fs/explorer.cpp
+        header/text/io_text.h
+        cpp/text/io_text.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)

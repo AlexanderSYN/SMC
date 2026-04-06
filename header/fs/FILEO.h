@@ -16,14 +16,13 @@
 namespace FILEO {
     void set_path_in_cd(std::string path_by_user,
         std::string OPath, fs::path path);
-    void read_file(const fs::path& path_f);
 
     void command_dir_windows(const fs::path& path);
     void command_open(const fs::path& path);
     void command_list(const fs::path& path_f);
     void command_list(const fs::path& path_f, std::string param);
 
-    void show_in_explorer(const fs::path& path);
+
 }
 
 #endif //FILEO_H
