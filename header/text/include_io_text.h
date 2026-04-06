@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <fstream>
 #include <vector>
+#include <ranges>
 
 namespace fs = std::filesystem;
 

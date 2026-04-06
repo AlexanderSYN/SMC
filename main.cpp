@@ -208,65 +208,21 @@ int main() {
 
     // echo (param) (path / text) (text)
     commands["echo"] = [&](const std::vector<std::string>& args) {
-        if (args.size() == 2 || args.size() == 1) {
-           std::println("[HINT] you need to write like so: "
-                        "echo (parameter) (text) (path)");
-        }
-
-        else if (args.size() >= 3) {
-            fs::path fll_path = helper::connect_path(path_ff::get_path(),
-                                                    args[2]);
-
-            if (!fs::exists(args[2]) && !fs::exists(fll_path)) {
-                if (args[1] == "-w" || args[1] == "--write") {
-                    for (const auto& t : args | std::views::drop(2))
-                        text::write(path_ff::get_path(), t);
-                }
-                else if (args[1] == "-rw" || args[1] == "--rewrite") {
-                    for (const auto& t : args | std::views::drop(2))
-                        text::rewrite(path_ff::get_path(), t);
-                }
-                else {
-                    std::println("[ERR] Uknown parameter");
-                    std::println("[HINT] Write help text");
-                }
-            }
-            else {
-                if (fs::exists(args[2])) {
-                    if (args[1] == "-w" || args[1] == "--write") {
-                        for (const auto& t : args | std::views::drop(3))
-                            text::write(args[2], t);
-                    }
-                    else if (args[1] == "-rw" || args[1] == "--rewrite") {
-                        for (const auto& t : args | std::views::drop(3))
-                            text::rewrite(args[2], t);
-                    }
-                    else {
-                        std::println("[ERR] Uknown parameter");
-                        std::println("[HINT] Write help text");
-                    }
-                }
-                else {
-                    if (args[1] == "-w" || args[1] == "--write") {
-                        for (const auto& t : args | std::views::drop(3))
-                            text::write(fll_path, t);
-                    }
-                    else if (args[1] == "-rw" || args[1] == "--rewrite") {
-                        for (const auto& t : args | std::views::drop(3))
-                            text::rewrite(fll_path, t);
-                    }
-                    else {
-                        std::println("[ERR] Uknown parameter");
-                        std::println("[HINT] Write help text");
-                    }
-                }
-
-
-            }
-        }
-
+        text::full_functional_echo(args, path_ff::get_path());
     };
-
+    // write many lines
+    // echoln (path / nothing)
+    commands["echoln"] = [&](const std::vector<std::string>& args) {
+        fs::path path_f = text::resolve_file_path_for_echolnrw(args,
+                                            path_ff::get_path());
+        text::write_many_lines(path_f);
+    };
+    // rewrite text
+    commands["echolnrw"] = [&](const std::vector<std::string>& args) {
+        fs::path path_f = text::resolve_file_path_for_echolnrw(args,
+                                        path_ff::get_path());
+        text::rewrite_many_lines(path_f);
+    };
 
 
     //============================
