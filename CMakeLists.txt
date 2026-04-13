@@ -34,5 +34,9 @@ add_executable(MCComand main.cpp
         cpp/fs/explorer.cpp
         header/text/io_text.h
         cpp/text/io_text.cpp
+        header/fs/disk.h
+        cpp/fs/disk.cpp
+        cpp/fs/space.cpp
+        header/fs/space.h
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)

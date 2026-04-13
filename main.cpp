@@ -17,6 +17,7 @@
 #include "header/fs/FILEDEL.h"
 #include "header/fs/FILEFF.h"
 #include "header/fs/explorer.h"
+#include "header/fs/disk.h"
 
 //
 // text
@@ -343,6 +344,28 @@ int main() {
     commands["del"] = commands["delete"];
     commands["remove"] = commands["delete"];
     commands["rmv"] = commands["delete"];
+
+    //=================================
+    // disk drive
+    //=================================
+    // get free drive space
+    // example: D:/path >> free
+    // or : />> free D:\
+    //=================================
+    commands["free"] = [&](const std::vector<std::string>& args) {
+        if (args.size() == 1)
+            disk::free_in_disk(path_ff::get_path());
+        else
+            disk::free_in_disk(args[1]);
+
+    };
+    // folder size
+    commands["du"] = [&](const std::vector<std::string>& args) {
+        if (args.size() == 1)
+            disk::ocuppied_in_folders(path_ff::get_path());
+        else
+            disk::ocuppied_in_folders(args[1]);
+    };
 
     std::println("for help type help!");
 
