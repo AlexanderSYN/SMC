@@ -9,9 +9,9 @@
 #include <functional>
 #include <windows.h>
 
-//
+//======================
 // fs
-//
+//======================
 #include "header/fs/FILEO.h"
 #include "header/fs/FILEDC.hpp"
 #include "header/fs/FILEDEL.h"
@@ -19,25 +19,25 @@
 #include "header/fs/explorer.h"
 #include "header/fs/disk.h"
 
-//
+//======================
 // text
-//
+//======================
 #include "header/text/io_text.h"
 
-//
+//======================
 // console
-//
+//======================
 #include "header/console/cmd.h"
 #include "header/console/color_console.h"
 
-//
+//======================
 // time and date
-//
+//======================
 #include"header/date/date.h"
 
-//
+//======================
 // helper
-//
+//======================
 #include "header/helper/helper.h"
 #include "header/helper/path_ff.h"
 
@@ -45,10 +45,10 @@
 
 namespace fs = std::filesystem;
 
-//
+//================================
 // C++ 26
 // SMC - Simple Mini Commander
-//
+//================================
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
