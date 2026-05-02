@@ -10,11 +10,28 @@
 void FILEC::create_file(fs::path path, std::string file) {
     fs::path file_path = helper::resolve_existing_path(path,
         file);
+
+    if (fs::exists(file_path)) {
+        char choice;
+
+        std::println("[WARNING] file [{}] already exists!", file_path.string());
+        std::print("are you want to overwrite? <y/n>: ");
+
+        std::cin >> choice;
+        if (std::tolower(choice) == 'n') {
+            std::println("[SYSTEM] operation canceled");
+            helper::clear_input_buffer();
+            return;
+        }
+    }
+
     std::ofstream file_stream(file_path);
 
     if (file_stream.is_open()) {
         std::println("[SYSTEM] File [{}] created successfully!", file_path.string());
         file_stream.close();
+        helper::clear_input_buffer();
+
         return;
     }
 
