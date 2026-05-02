@@ -11,6 +11,12 @@
 // Helper Files / Folders
 //
 namespace HFILEF {
+
+    const long KB = 1024;
+    const long MB = 1024 * 2;
+    const long GB = 1024 * 3;
+    const long TB = 1024 * 4;
+
     //==========================================================
     // The list of system directories to skip (can be expanded)
     //==========================================================

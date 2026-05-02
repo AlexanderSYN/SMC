@@ -4,6 +4,8 @@
 
 #include "../../header/fs/FILEC.hpp"
 
+#include "../../header/helper/helper.h"
+
 /// create file in path
 /// @param path the path to save it to
 /// @param file file name and path
@@ -19,7 +21,7 @@ void FILEC::create_file(fs::path path, std::string file) {
 
     std::println(std::cerr, "[SYSTEM][ERROR] File could not be created at {}!", file_path);
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
+    helper::clear_input_buffer();
 }
 
 /// command for create files

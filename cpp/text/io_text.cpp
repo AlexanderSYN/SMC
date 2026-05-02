@@ -4,7 +4,13 @@
 
 #include "../../header/text/io_text.h"
 
+#include "../../header/fs/DIRMAKE.h"
 #include "../../header/helper/helper.h"
+
+
+//===============================
+//    Read text or other files
+//===============================
 
 /// read file -> output of information
 ///             from different text files
@@ -30,6 +36,9 @@ void text::read(const fs::path &path_f) {
     }
 }
 
+//===============================
+//             write
+//===============================
 ///
 /// write without new line text in file
 /// @param path_f path file to need write text
@@ -78,6 +87,43 @@ void text::writeln(const fs::path &path_f, const std::string &text) {
         std::cerr << "[ERROR_WRITE_TEXT] [CRITICAL] " << e.what() << std::endl;
     }
 }
+
+
+void write_lines(const fs::path &path_f) {
+    std::ofstream out(path_f,std::ios::app);
+
+    if (!out.is_open()) {
+        std::println(std::cerr, "[ERR] Could not open file: {}", path_f.string());
+        return;
+    }
+
+    std::string line;
+    std::println("Enter text (type 'done' or '!' on a new line to finish):");
+
+    while (std::getline(std::cin, line)) {
+        if (line == "done" || line == "!" || line == "~")
+            break;
+
+        out << line << std::endl;
+    }
+
+    out.close();
+    std::println("[SYSTEM][TEXT] Text has been written in file [{}]", path_f.string());
+}
+///
+/// like a notepad
+/// @param path_f path file to need to write text
+void text::write_many_lines(const fs::path &path_f) {
+    try {
+        write_lines(path_f);
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR_WRITE_MANY_LINES_TEXT] [CRITICAL] " << e.what() << std::endl;
+    }
+}
+
+//===============================
+//           rewrite
+//===============================
 
 ///
 /// rewriting lines from each new line after each space
@@ -128,95 +174,43 @@ void text::rewrite(const fs::path &path_f, const std::string &text) {
     }
 }
 
-///
-/// like a notepad
-/// @param path_f path file to need to write text
-void text::write_many_lines(const fs::path &path_f) {
-    try {
-        std::ofstream out(path_f,std::ios::app);
+void rewrite_lines_for_func_rewrite_many_lines(const fs::path &path_f) {
+    std::ofstream out(path_f);
 
-        if (!out.is_open()) {
-            std::println(std::cerr, "[ERR] Could not open file: {}", path_f.string());
-            return;
-        }
-
-        std::string line;
-        std::println("Enter text (type 'done' or '!' on a new line to finish):");
-
-        while (std::getline(std::cin, line)) {
-            if (line == "done" || line == "!" || line == "~")
-                break;
-
-            out << line << std::endl;
-        }
-
-        out.close();
-        std::println("[SYSTEM][TEXT] Text has been written in file [{}]", path_f.string());
-
-    } catch (const std::exception& e) {
-        std::cerr << "[ERROR_WRITE_MANY_LINES_TEXT] [CRITICAL] " << e.what() << std::endl;
+    if (!out.is_open()) {
+        std::println(std::cerr, "[ERR] Could not open file: {}", path_f.string());
+        return;
     }
-}
 
+    std::string line;
+    std::println("Enter text (type 'done' or '!' on a new line to finish):");
+
+    while (std::getline(std::cin, line)) {
+        if (line == "done" || line == "!" || line == "~")
+            break;
+
+        out << line << std::endl;
+    }
+
+    out.close();
+    std::println("[SYSTEM][TEXT] Text has been written in file [{}]", path_f.string());
+}
 ///
 /// like a notepad
 /// @param path_f path file to need to write text
 void text::rewrite_many_lines(const fs::path &path_f) {
     try {
-        std::ofstream out(path_f);
-
-        if (!out.is_open()) {
-            std::println(std::cerr, "[ERR] Could not open file: {}", path_f.string());
-            return;
-        }
-
-        std::string line;
-        std::println("Enter text (type 'done' or '!' on a new line to finish):");
-
-        while (std::getline(std::cin, line)) {
-            if (line == "done" || line == "!" || line == "~")
-                break;
-
-            out << line << std::endl;
-        }
-
-        out.close();
-        std::println("[SYSTEM][TEXT] Text has been written in file [{}]", path_f.string());
-
+        rewrite_lines_for_func_rewrite_many_lines(path_f);
     } catch (const std::exception& e) {
         std::cerr << "[ERROR_WRITE_MANY_LINES_TEXT] [CRITICAL] " << e.what() << std::endl;
     }
 }
 
-///
-/// Resolves a file path from command arguments
-///
-/// Returns an existing path if provided, otherwise connects the argument
-/// with the default path. Returns default path when no argument is given.
-///
-/// @param args         command arguments (args[1] is the file path)
-/// @param default_path fallback path when args are empty
-/// @return fs::path    resolved file path
-///
-fs::path text::resolve_file_path_for_echolnrw(const std::vector<std::string>& args,
-                           const fs::path& default_path) {
-
-    if (args.size() == 1)
-        return default_path;
-
-    if (fs::exists(args[1]))
-        return fs::path(args[1]);
-
-    return helper::connect_path(default_path, args[1]);
-}
-
-///
-/// Executes a full-featured `echo` command.
-/// @param args         Vector of args passed from main.cpp
-/// @param default_path Path obtained from path_ff::get_path()
-void text::full_functional_echo(const std::vector<std::string>& args,
-                                fs::path default_path) {
-
+//===============================
+//             echo
+//===============================
+void func_echo(const std::vector<std::string>& args,
+                fs::path default_path) {
     fs::path tmp_path = helper::connect_path(path_ff::get_path(),
                                             default_path);
 
@@ -266,8 +260,48 @@ void text::full_functional_echo(const std::vector<std::string>& args,
 
     // Write to file
     if (is_write)
-        write(target_path, full_text);
+        text::write(target_path, full_text);
     else
-        rewrite(target_path, full_text);  // or append
-
+        text::rewrite(target_path, full_text);  // or append
 }
+
+///
+/// Executes a full-featured `echo` command.
+/// @param args         Vector of args passed from main.cpp
+/// @param default_path Path obtained from path_ff::get_path()
+void text::full_functional_echo(const std::vector<std::string>& args,
+                                fs::path default_path) {
+
+    try {
+        func_echo(args, default_path);
+    }
+    catch (const std::exception& e) {
+        std::println(std::cerr, "[CRITICAL_ERROR_ECHO] {}", e.what());
+    }
+}
+
+//===================================
+// resolve file path and other func
+//===================================
+///
+/// Resolves a file path from command arguments
+///
+/// Returns an existing path if provided, otherwise connects the argument
+/// with the default path. Returns default path when no argument is given.
+///
+/// @param args         command arguments (args[1] is the file path)
+/// @param default_path fallback path when args are empty
+/// @return fs::path    resolved file path
+///
+fs::path text::resolve_file_path_for_echolnrw(const std::vector<std::string>& args,
+                           const fs::path& default_path) {
+
+    if (args.size() == 1)
+        return default_path;
+
+    if (fs::exists(args[1]))
+        return fs::path(args[1]);
+
+    return helper::connect_path(default_path, args[1]);
+}
+

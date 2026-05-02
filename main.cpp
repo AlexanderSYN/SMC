@@ -151,7 +151,7 @@ int main() {
 
             if (args[1] == "search" || args[1] == "-s" || args[1] == "--search")
                 if (!hist_search.empty())
-                    for (int i = 1; i < hist_search.size(); i++)
+                    for (int i = 0; i < hist_search.size(); i++)
                         std::println("{}) {}", i, hist_search[i]);
                 else
                     std::println("[HINT] history search empty");
@@ -167,6 +167,7 @@ int main() {
                     std::cin >> choice;
                     if (std::tolower(choice) == 'y')
                         FILEC::create_file_and_record(path_ff::get_path(), "history.txt", history);
+                    helper::clear_input_buffer();
                 }
                 else {
                     if (args[3] == "hist" or args[3] == "history"
@@ -178,7 +179,7 @@ int main() {
                         FILEC::create_file_and_record(args[4], args[2], hist_search);
                 }
             }
-
+            helper::clear_input_buffer();
         } else
             for (int i = 1; i < history.size(); i++)
                 std::println("{}) {}", i, history[i]);
@@ -278,6 +279,7 @@ int main() {
         explr::show_in_explorer(args[1]);
     };
     commands["exp"] = commands["explorer"];
+    commands["explr"] = commands["explorer"];
     commands["openf"] = commands["explorer"];
 
     commands["run"] = [&](const std::vector<std::string>& args) {
@@ -297,23 +299,29 @@ int main() {
     };
 
     commands["copy"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 4) {
-            std::println("[HINT] incorrectly command, you need to write so: copy / cp (parametr) (source) (target)!");
+        if (args.size() < 3) {
+            std::println("[HINT] incorrectly command, you need to write so: copy / cp (parametr) (source) (target) or\n"
+                         "copy / cp (source) (target)!");
             return;
         }
 
-        std::string parameter = args[1];
-        fs::path source = args[2];
-        fs::path target = args[3];
+        std::string parameter;
+        fs::path source, target;
 
-        if (parameter == "-f" ||  parameter == "-fo" || parameter == "--file"
-            || parameter == "--file-overwrite")
-            copy::files(source, target, path_ff::get_path(), parameter);
-        else if (parameter == "-d" || parameter == "-do"
-            || parameter == "-directory" || parameter == "--directory-overwrite")
-            copy::folders(source, target, path_ff::get_path(), parameter);
-        else
-            std::println("[HINT] incorrectly command, you need to write so: copy / cp (parametr) (source) (target)!");
+        if (args.size() == 3) {
+            parameter = "no";
+            source = args[1];
+            target = args[2];
+        }
+        else if (args.size() == 4) {
+            parameter = args[3];
+            source = args[2];
+            target = args[3];
+        }
+
+        copy::copy_folder_or_file(source, target,
+                path_ff::get_path(), parameter);
+
     };
     commands["cp"] = commands["copy"];
 
@@ -358,10 +366,11 @@ int main() {
         }
         if (args.size() <= 2) {
             FILEFF::find(args[1], "-g", path_ff::get_path());
+            hist_search.push_back(args[1]);
             return;
         }
-
         FILEFF::find(args[2], args[1], path_ff::get_path());
+        hist_search.push_back(args[1]);
     };
 
     //========================

@@ -12,9 +12,6 @@
 
 //======================
 // command -> cd (path)
-//
-// example:
-// \ >> cd D:\test
 //======================
 void FILEO::set_path_in_cd(std::string path_by_user,
         std::string OPath, fs::path path) {
@@ -68,9 +65,6 @@ void FILEO::set_path_in_cd(std::string path_by_user,
 
 //======================================
 // command dir -> command by windows
-//
-// example
-// D:\test>> dir
 //======================================
 void FILEO::command_dir_windows(const fs::path &path) {
     if (!fs::exists(path)) {
@@ -90,9 +84,6 @@ void FILEO::command_dir_windows(const fs::path &path) {
 
 //================================================
 // command open -> output all files from folder
-//
-// example
-// D:\>> open
 //================================================
 void FILEO::command_open(const fs::path &path) {
     try {
@@ -107,22 +98,17 @@ void FILEO::command_open(const fs::path &path) {
                 auto ftime = std::filesystem::last_write_time(entry.path());
                 auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
 
+                // example output: 12.04.2026 22:05 123mb [FILE/DIR] name file / folder
                 if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
-                    std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",  sctp,
-                        HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
-                        HFILEF::is_hidden(entry),
-                        entry.path().filename().string());
+                    output_for_command_open(entry, sctp, false);
                     count_files++;
-                } else {
-                    std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}", sctp,
-                        HFILEF::type(entry),
-                        HFILEF::is_hidden(entry),
-                        entry.path().filename().string());
+                }
+                else {
+                    output_for_command_open(entry, sctp, true);
                     count_folder++;
                 }
             } catch (const std::exception &e) {
                 std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
-                continue;
             }
 
         }
@@ -132,6 +118,18 @@ void FILEO::command_open(const fs::path &path) {
     } catch (const std::exception& e) {
         std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
     }
+}
+void FILEO::output_for_command_open(const auto& entry, auto sctp, boolean isSystemAndThisFile) {
+    if (!isSystemAndThisFile)
+        std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",  sctp,
+                        HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
+                        HFILEF::is_hidden(entry),
+                        entry.path().filename().string());
+    else
+        std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}", sctp,
+                        HFILEF::type(entry),
+                        HFILEF::is_hidden(entry),
+                        entry.path().filename().string());
 }
 
 //============================

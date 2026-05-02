@@ -4,6 +4,7 @@
 
 #include "../../header/fs/FILEFF.h"
 #include "../../header/fs/EXPLORER.h"
+#include "../../header/helper/helper.h"
 
 void FILEFF::find(std::string search_term, std::string parametr,
                   const fs::path &path_f) {
@@ -114,7 +115,8 @@ void FILEFF::find(std::string search_term, std::string parametr,
                         e.what());
                 }
             }
-        } else if (parametr == "-ld" || parametr == "--local-dir") {
+        }
+         else if (parametr == "-ld" || parametr == "--local-dir") {
             try {
                 std::println("Only folders");
                 for (const auto &entry: fs::directory_iterator(path_f)) {
@@ -155,7 +157,7 @@ void FILEFF::find(std::string search_term, std::string parametr,
 
             int choice;
             std::cin >> choice;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
+            helper::clear_input_buffer();
 
             choice--;
             if (choice >= 1 && choice < paths_founded_ff.size()) {
@@ -242,11 +244,11 @@ void FILEFF::recurs_search(std::string search_term,
 
 
             if (ext != target_ext) continue;
-            else  {
-                paths_founded_ff.push_back(entry.path().string());
-                std::println("{} - Found: {}", paths_founded_ff.size(),
-                                                entry.path().string());
-            }
+
+            paths_founded_ff.push_back(entry.path().string());
+            std::println("{} - Found: {}", paths_founded_ff.size(),
+                                            entry.path().string());
+
         }
         // only for name
         if (special_search_file_name) {
@@ -258,11 +260,11 @@ void FILEFF::recurs_search(std::string search_term,
 
             if (name != target_name || fs::is_directory(entry.path()))
                 continue;
-            else  {
-                paths_founded_ff.push_back(entry.path().string());
-                std::println("{} - Found: {}", paths_founded_ff.size(),
-                                                entry.path().string());
-            }
+
+            paths_founded_ff.push_back(entry.path().string());
+            std::println("{} - Found: {}", paths_founded_ff.size(),
+                                            entry.path().string());
+
         }
 
         paths_founded_ff.push_back(entry.path().string());

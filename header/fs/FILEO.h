@@ -18,7 +18,11 @@ namespace FILEO {
         std::string OPath, fs::path path);
 
     void command_dir_windows(const fs::path& path);
+
+    void output_for_command_open(const auto& entry, auto sctp,
+                            boolean isSystemAndThisFile);
     void command_open(const fs::path& path);
+
     void command_list(const fs::path& path_f);
     void command_list(const fs::path& path_f, std::string param);
 
