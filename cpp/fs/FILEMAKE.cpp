@@ -2,24 +2,23 @@
 // Created by AlexanderSYN on 30.03.2026.
 //
 
-#include "../../header/fs/FILEC.hpp"
+#include "../../header/fs/FILEMAKE.hpp"
 
 #include "../../header/helper/helper.h"
 
-/// create file in path
-/// @param path the path to save it to
-/// @param file file name and path
+
 void FILEC::create_file(fs::path path, std::string file) {
-    std::string file_path = path.string() + "\\" + file;
+    fs::path file_path = helper::resolve_existing_path(path,
+        file);
     std::ofstream file_stream(file_path);
 
     if (file_stream.is_open()) {
-        std::println("[SYSTEM] File created successfully!");
+        std::println("[SYSTEM] File [{}] created successfully!", file_path.string());
         file_stream.close();
         return;
     }
 
-    std::println(std::cerr, "[SYSTEM][ERROR] File could not be created at {}!", file_path);
+    std::println(std::cerr, "[SYSTEM][ERROR] File could not be created at {}!", file_path.string());
 
     helper::clear_input_buffer();
 }

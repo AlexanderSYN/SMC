@@ -3,7 +3,7 @@
 //
 
 //==================================
-// FILEFF - File Find File / Folder
+// FILEFIND - File Find File / Folder
 //==================================
 
 #ifndef FINDFF_H
@@ -12,7 +12,7 @@
 #include "include_fs.h"
 #include "../helper/Helperfs/HFILEF.h"
 
-class FILEFF {
+class FILEFIND {
 public:
     //==========================================================
     // find - find File or Folder

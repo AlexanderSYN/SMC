@@ -31,10 +31,7 @@ fs::path helper::connect_path_with_spaces(
 
     return fs::path(full_path);
 }
-///
-/// @param args the vector in main.cpp
-/// @param drop the number of items to skip (default = 1)
-/// @return string full path
+
 std::string helper::connect_path_with_spaces_str(
         const std::vector<std::string>& args,
         int drop) {
@@ -54,14 +51,14 @@ std::string helper::connect_path_with_spaces_str(
     return full_path;
 }
 
-///
-/// just connect 2 path in 1
-/// @param first_path first path to need connect
-/// @param second_path second path for connect
-/// @return path
 fs::path helper::connect_path(const fs::path &first_path, const fs::path &second_path) {
     return first_path / second_path;
 }
+
+fs::path helper::resolve_existing_path(const fs::path &base_path, const fs::path &input_path) {
+    return fs::exists(input_path) ? input_path : base_path / input_path;
+}
+
 
 void helper::clear_input_buffer() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer

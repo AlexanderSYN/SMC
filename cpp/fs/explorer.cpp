@@ -10,7 +10,7 @@
 /// example
 /// D:\ >> explorer or exp
 /// @param path path folder or file to need to select in explorer
-void explr::show_in_explorer(const fs::path& path) {
+void explr::reveal_in_explorer(const fs::path& path) {
     try {
         if (!fs::exists(path)) {
             std::println("Path does not exist: {}", path.string());
@@ -55,7 +55,7 @@ void explr::show_in_explorer(const fs::path& path) {
 ///
 /// @param paths_founded_ff path folder or file to need to select in explorer
 /// @param choice what file / folder need to select
-void explr::show_in_explorer(
+void explr::reveal_in_explorer(
     const std::vector<std::string>& paths_founded_ff, int choice) {
 
     try {
@@ -102,7 +102,7 @@ void explr::show_in_explorer(
 ///
 /// run file use a system application
 /// @param path_f path file
-void explr::run_file(const fs::path &path_f) {
+void explr::run_file(const fs::path& path_f) {
     try {
         #if defined(_WIN32) //Windows
                 std::string command = "start \"\" \"" + path_f.string() + "\"";

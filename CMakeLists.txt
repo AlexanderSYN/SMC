@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.31)
-project(MCComand)
+project(SimpleMiniCommander)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_executable(MCComand main.cpp
-        header/fs/FILEO.h
-        header/fs/FILEC.hpp
+add_executable(SimpleMiniCommander main.cpp
+        header/fs/FILEOPEN.h
+        header/fs/FILEMAKE.hpp
 
         header/helper/check_command.hpp
         header/helper/include_helper.h
         header/helper/path_ff.h
 
-        cpp/fs/FILEO.cpp
-        cpp/fs/FILEC.cpp
+        cpp/fs/FILEOPEN.cpp
+        cpp/fs/FILEMAKE.cpp
 
         cpp/helper/path_ff.cpp
         header/console/cmd.h
@@ -25,13 +25,13 @@ add_executable(MCComand main.cpp
         cpp/fs/DIRMAKE.cpp
         header/helper/Helperfs/HFILEF.h
         cpp/helper/Hfs/HFILEF.cpp
-        header/fs/FILEDel.h
-        cpp/fs/FILEDEL.cpp
+        header/fs/FILERMV.h
+        cpp/fs/FILERMV.cpp
         header/date/date.h
         header/date/include_date.h
         cpp/date/date.cpp
-        header/fs/FILEFF.h
-        cpp/fs/FILEFF.cpp
+        header/fs/FILEFIND.h
+        cpp/fs/FILEFIND.cpp
         header/fs/explorer.h
         cpp/fs/explorer.cpp
         header/text/io_text.h
@@ -45,4 +45,4 @@ add_executable(MCComand main.cpp
         header/fs/MOVE.h
         cpp/fs/MOVE.cpp
 )
-target_link_libraries(MCComand PRIVATE stdc++exp)
+target_link_libraries(SimpleMiniCommander PRIVATE stdc++exp)

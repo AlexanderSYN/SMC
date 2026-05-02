@@ -12,11 +12,11 @@
 //======================
 // fs
 //======================
-#include "header/fs/FILEO.h"
-#include "header/fs/FILEC.hpp"
+#include "header/fs/FILEOPEN.h"
+#include "header/fs/FILEMAKE.hpp"
 #include "header/fs/DIRMAKE.h"
-#include "header/fs/FILEDEL.h"
-#include "header/fs/FILEFF.h"
+#include "header/fs/FILERMV.h"
+#include "header/fs/FILEFIND.h"
 #include "header/fs/EXPLORER.h"
 #include "header/fs/DISK.h"
 
@@ -39,14 +39,12 @@
 //======================
 // helper
 //======================
+#include <assert.h>
+
 #include "header/fs/COPY.h"
-#include "header/fs/DIRMAKE.h"
-#include "header/fs/DIRMAKE.h"
 #include "header/fs/MOVE.h"
 #include "header/helper/helper.h"
 #include "header/helper/path_ff.h"
-
-
 
 namespace fs = std::filesystem;
 
@@ -100,7 +98,7 @@ int main() {
     commands["info"] = [&](const std::vector<std::string>&) {
         std::println("___Simple Mini Commander___");
         std::println("___Author:  AlexanderSYN___");
-        std::println("______Beta Test V0.01______");
+        std::println("______Beta Test V0.02______");
     };
 
     //================
@@ -236,8 +234,7 @@ int main() {
         text::write_many_lines(path_f);
     };
     // rewrite (text)
-    // like echoln only rewrite
-    commands["echolnrw"] = [&](const std::vector<std::string>& args) {
+    commands["echoln-rw"] = [&](const std::vector<std::string>& args) {
         fs::path path_f = text::resolve_file_path_for_echolnrw(args,
                                         path_ff::get_path());
         text::rewrite_many_lines(path_f);
@@ -268,15 +265,15 @@ int main() {
 
     commands["explorer"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1) {
-            explr::show_in_explorer(path_ff::get_path());
+            explr::reveal_in_explorer(path_ff::get_path());
             return;
         }
 
         if (args.size() > 2) {
-            explr::show_in_explorer(helper::connect_path_with_spaces(args));
+            explr::reveal_in_explorer(helper::connect_path_with_spaces(args));
         }
 
-        explr::show_in_explorer(args[1]);
+        explr::reveal_in_explorer(args[1]);
     };
     commands["exp"] = commands["explorer"];
     commands["explr"] = commands["explorer"];
@@ -299,7 +296,7 @@ int main() {
     };
 
     commands["copy"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 3) {
+        if (args.size() < 2) {
             std::println("[HINT] incorrectly command, you need to write so: copy / cp (parametr) (source) (target) or\n"
                          "copy / cp (source) (target)!");
             return;
@@ -308,7 +305,12 @@ int main() {
         std::string parameter;
         fs::path source, target;
 
-        if (args.size() == 3) {
+        if (args.size() == 2) {
+            parameter = "no";
+            source = path_ff::get_path();
+            target = args[1];
+        }
+        else if (args.size() == 3) {
             parameter = "no";
             source = args[1];
             target = args[2];
@@ -319,8 +321,7 @@ int main() {
             target = args[3];
         }
 
-        copy::copy_folder_or_file(source, target,
-                path_ff::get_path(), parameter);
+        copy::copy_folder_or_file(source, target, parameter);
 
     };
     commands["cp"] = commands["copy"];
@@ -334,7 +335,7 @@ int main() {
         std::string source = args[1];
         std::string target = args[2];
 
-        MOVE::moveFF(source, target, path_ff::get_path());
+        MOVE::move_item(source, target);
     };
 
     commands["open"] = [&](const std::vector<std::string>& args) {
@@ -365,11 +366,11 @@ int main() {
             return;
         }
         if (args.size() <= 2) {
-            FILEFF::find(args[1], "-g", path_ff::get_path());
+            FILEFIND::find(args[1], "-g", path_ff::get_path());
             hist_search.push_back(args[1]);
             return;
         }
-        FILEFF::find(args[2], args[1], path_ff::get_path());
+        FILEFIND::find(args[2], args[1], path_ff::get_path());
         hist_search.push_back(args[1]);
     };
 
@@ -395,10 +396,15 @@ int main() {
     // delete file or folder
     //========================
     commands["delete"] = [&](const std::vector<std::string>& args) {
-        if (args.size() == 2)
-            FILEDEL::del(helper::connect_path(path_ff::get_path(), args[1]));
+        if (args.size() == 1) {
+            FILERMV::remove(path_ff::get_path());
+
+            if (!fs::exists(path_ff::get_path()))
+                path_ff::set_path(path_ff::get_path().parent_path().string());
+        }
         else
-            FILEDEL::del(path_ff::get_path());
+            FILERMV::remove_multiple(path_ff::get_path(), args);
+
     };
     commands["del"] = commands["delete"];
     commands["remove"] = commands["delete"];
@@ -419,12 +425,13 @@ int main() {
 
     };
     // folder size
-    commands["du"] = [&](const std::vector<std::string>& args) {
+    commands["size"] = [&](const std::vector<std::string>& args) {
         if (args.size() == 1)
             disk::output_ocuppied_in_folders(path_ff::get_path());
         else
             disk::output_ocuppied_in_folders(args[1]);
     };
+    commands["du"] = commands["size"];
 
     std::println("for help type help!");
 

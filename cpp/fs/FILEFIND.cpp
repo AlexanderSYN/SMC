@@ -2,15 +2,15 @@
 // Created by AlexanderSYN on 05.04.2026.
 //
 
-#include "../../header/fs/FILEFF.h"
+#include "../../header/fs/FILEFIND.h"
 #include "../../header/fs/EXPLORER.h"
 #include "../../header/helper/helper.h"
 
-void FILEFF::find(std::string search_term, std::string parametr,
+void FILEFIND::find(std::string search_term, std::string parametr,
                   const fs::path &path_f) {
 
      try {
-        std::vector<std::string> paths_founded_ff; // ff - file and folder
+        std::vector<std::string> paths_founded; // ff - file and folder
 
          if (!fs::is_directory(path_f) || !fs::exists(path_f)) {
             std::println(std::cerr, "[ERR] find: the folder doesn't exist!\n");
@@ -44,9 +44,9 @@ void FILEFF::find(std::string search_term, std::string parametr,
                 std::transform(filename_lower.begin(), filename_lower.end(), filename_lower.begin(), ::tolower);
 
                 if (filename_lower.find(search_lower) != std::string::npos) {
-                    paths_founded_ff.push_back(entry.path().string());
+                    paths_founded.push_back(entry.path().string());
 
-                    std::println("{} - Found: {}", paths_founded_ff.size(), entry.path().string());
+                    std::println("{} - Found: {}", paths_founded.size(), entry.path().string());
 
                 }
             }
@@ -66,9 +66,9 @@ void FILEFF::find(std::string search_term, std::string parametr,
                         }
 
                         if (entry.is_regular_file() && entry.path().extension().string() == target_extension) {
-                            paths_founded_ff.push_back(entry.path().string());
+                            paths_founded.push_back(entry.path().string());
 
-                            std::println("{} - Found: {}", paths_founded_ff.size(), entry.path().string());
+                            std::println("{} - Found: {}", paths_founded.size(), entry.path().string());
 
                         }
                     }
@@ -94,8 +94,8 @@ void FILEFF::find(std::string search_term, std::string parametr,
                             && entry.path().extension().string() == target_extension
                             && entry.path().filename().string() == search_term) {
 
-                            paths_founded_ff.push_back(entry.path().string());
-                            std::println("{} - Found: {}", paths_founded_ff.size(), entry.path().string());
+                            paths_founded.push_back(entry.path().string());
+                            std::println("{} - Found: {}", paths_founded.size(), entry.path().string());
                         }
 
                         // if you write (filename).*
@@ -103,9 +103,9 @@ void FILEFF::find(std::string search_term, std::string parametr,
                             if (entry.is_regular_file() && entry.path().stem().string() == search_term.substr(
                                     0, search_term.size() - 2)) {
 
-                                paths_founded_ff.push_back(entry.path().string());
+                                paths_founded.push_back(entry.path().string());
                                 std::println("{} - Found: {}",
-                                    paths_founded_ff, entry.path().string());
+                                    paths_founded, entry.path().string());
 
                             }
                         }
@@ -128,9 +128,9 @@ void FILEFF::find(std::string search_term, std::string parametr,
 
                     if (is_directory(entry.path()) &&
                         entry.path().filename().string() == search_term) {
-                        paths_founded_ff.push_back(entry.path().string());
+                        paths_founded.push_back(entry.path().string());
                         std::println("{} - Found Folder: {}",
-                            paths_founded_ff.size(), entry.path().string());
+                            paths_founded.size(), entry.path().string());
                     }
                 }
             } catch (const std::exception &e) {
@@ -145,23 +145,23 @@ void FILEFF::find(std::string search_term, std::string parametr,
                  || parametr == "-r" || parametr == "--recursive"
                  || parametr == "-gd" || parametr == "--global-directory"
                  || parametr == "-gf" || parametr == "--global-file") {
-            recurs_search(search_term, path_f, paths_founded_ff,
+            recurs_search(search_term, path_f, paths_founded,
                     parametr);
         }
 
         // Handle results
-        if (!paths_founded_ff.empty()) {
-            std::println("\nFound {} item(s)", paths_founded_ff.size());
+        if (!paths_founded.empty()) {
+            std::println("\nFound {} item(s)", paths_founded.size());
             std::println("Enter number to open (1-{}) or -1 to exit",
-                    paths_founded_ff.size());
+                    paths_founded.size());
 
             int choice;
             std::cin >> choice;
             helper::clear_input_buffer();
 
             choice--;
-            if (choice >= 1 && choice < paths_founded_ff.size()) {
-                explr::show_in_explorer(paths_founded_ff, choice);
+            if (choice >= 1 && choice < paths_founded.size()) {
+                explr::reveal_in_explorer(paths_founded, choice);
             }
         }
         else std::println("No files or folders found matching '{}'",
@@ -174,7 +174,7 @@ void FILEFF::find(std::string search_term, std::string parametr,
 }
 
 
-void FILEFF::recurs_search(std::string search_term,
+void FILEFIND::recurs_search(std::string search_term,
     const fs::path &path_f, std::vector<std::string> &paths_founded_ff,
     std::string param) {
 

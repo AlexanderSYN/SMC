@@ -9,7 +9,7 @@
 
 namespace MOVE {
 
-    void moveFF(fs::path from, fs::path to, fs::path path_ff);
+    void move_item(fs::path source, fs::path target);
 
 }
 

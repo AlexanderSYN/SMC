@@ -3,26 +3,28 @@
 //
 #include "../../header/fs/MOVE.h"
 #include "../../header/fs/COPY.h"
-#include "../../header/fs/FILEDEL.h"
+#include "../../header/fs/FILERMV.h"
 #include "../../header/helper/Helperfs/HFILEF.h"
 
-void move_file_or_folder(fs::path from, fs::path to, fs::path pathFF) {
-    fs::path from_path = HFILEF::get_fetch_full_path(from, pathFF);
-    fs::path to_path = HFILEF::get_fetch_full_path(to, pathFF);
+void move_file_or_folder(fs::path from, fs::path to) {
+    const fs::path current_path = path_ff::get_path();
 
-    copy::copy_only_for_func_move(from, to, pathFF);
+    fs::path source = HFILEF::get_fetch_full_path(from, current_path);
+    fs::path target  = HFILEF::get_fetch_full_path(to, current_path);
 
-    if (exists(to_path) && exists(from_path)) {
-        FILEDEL::del_without_param_and_log(from_path);
-        std::println("[SYSTEM] FILE or FOLDER successfully moved to {}",to_path.string());
+    copy::copy_only_for_func_move(from, to);
+
+    if (exists(target) && exists(source)) {
+        FILERMV::remove_without_param_and_log(source);
+        std::println("[SYSTEM] FILE or FOLDER successfully moved to {}",target.string());
     }
     else
-        std::println(std::cerr, "[ERROR] FILE or FOLDER is not moved to {}", to_path.string());
+        std::println(std::cerr, "[ERROR] FILE or FOLDER is not moved to {}", target.string());
 }
 
-void MOVE::moveFF(fs::path from, fs::path to, fs::path path_ff) {
+void MOVE::move_item(fs::path source, fs::path target) {
     try {
-        move_file_or_folder(from, to, path_ff);
+        move_file_or_folder(source, target);
     } catch (const std::exception &e) {
         std::println(std::cerr, "[CRITICAL_ERROR_MOVE] {}", e.what());
     }

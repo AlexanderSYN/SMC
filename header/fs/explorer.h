@@ -8,8 +8,8 @@
 #include "include_fs.h"
 
 namespace explr {
-    void show_in_explorer(const fs::path& path);
-    void show_in_explorer(const std::vector<std::string>& paths_founded_ff,
+    void reveal_in_explorer(const fs::path& path);
+    void reveal_in_explorer(const std::vector<std::string>& paths_founded_ff,
                         int choice);
     void run_file(const fs::path& path_f);
 }
