@@ -39,8 +39,6 @@
 //======================
 // helper
 //======================
-#include <assert.h>
-
 #include "header/fs/COPY.h"
 #include "header/fs/MOVE.h"
 #include "header/helper/helper.h"
